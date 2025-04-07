@@ -1,10 +1,9 @@
 <template>
-  <RouterView></RouterView>
+  <RouterView :key="$route.fullPath"></RouterView>
 </template>
 
 <script setup lang='ts' name='App'>
 import { RouterView } from 'vue-router';
-
 </script>
 
 <style scoped></style>

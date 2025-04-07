@@ -31,10 +31,10 @@ ul {
   clear: both;
 }
 
-/* body {
-  background-image: url(../static/bgImg.png);
+body {
+  background-image: url('../../bgImg.png');
   background-attachment: fixed;
-} */
+}
 
 @media only screen and (max-width: 2080px),
 only screen and (max-device-width:2080px) {

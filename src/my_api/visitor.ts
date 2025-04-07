@@ -28,7 +28,7 @@ export const login = (data: LoginForm) => {
 
 export const register = (data: RegisterForm) => {
   return request({
-    url: '/visitor',
+    url: '/visitor/visitor',
     method: 'post',
     data: {
       email: data.email,
@@ -50,7 +50,7 @@ export const getEmailCaptcha = (email: string) => {
 
 export const getVisitorMessage = () => {
   return request({
-    url: '/visitor',
+    url: '/visitor/visitor',
     method: 'get'
   })
 } 
