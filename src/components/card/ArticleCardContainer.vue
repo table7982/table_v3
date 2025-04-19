@@ -4,13 +4,14 @@
       <p>最近</p>
     </div>
     <div class="article_card_container">
-      <div class="card article_card" v-for="article in articleListMessage">
+      <div class="card article_card" v-for="article in articleListMessage" :key="article.id">
         <div class="elment_img_container">
-          <el-image src="/sunset2.jpg" fit="cover" class="img_class"></el-image>
+          <el-image :src="article.img_file_path" fit="cover" class="img_class"
+            @click="handleClickArticle(article.id)"></el-image>
         </div>
         <div class="card_message_container">
           <div class="creat_time">
-            {{ article.creat_time }}
+            {{ article.display_time ? article.display_time : article.creat_time }}
           </div>
           <div class="article_title">
             {{ article.title }}
@@ -20,10 +21,12 @@
           </div>
         </div>
         <div class="base_message_container">
-          Aa:&nbsp;1024 &nbsp;&nbsp;&nbsp;
-          <p class="heart" ref="heartRef" @click="handleClickHeart(article.id)">&hearts;</p>
-          :&nbsp;{{ 4 }}
-          &nbsp;&nbsp;&nbsp;评论:&nbsp;0
+          Aa:&nbsp;{{ article.md_file_len }} &nbsp;&nbsp;&nbsp;
+          <p class="heart" @click="handleClickHeart(article.id, article.if_like)"
+            :class="{ 'heart_active': article.if_like }">
+            &hearts;</p>
+          :&nbsp;{{ article.like_number }}
+          &nbsp;&nbsp;&nbsp;评论:&nbsp;{{ article.comment_number }}
         </div>
 
 
@@ -37,30 +40,41 @@
 
 <script setup lang='ts' name='ArticleCardContainer'>
 import { onMounted, ref } from 'vue'
-const heartRef = ref<HTMLElement | null>(null)
+import { useArticleStore } from '@/stores/article'
+import { nextTick } from 'vue'
+import { el } from 'element-plus/es/locales.mjs'
+import router from '@/router'
+const articleStore = useArticleStore()
+const articleListMessage = ref<articleItemForm[]>([])
+const reloadArticleMessage = async () => {
+  articleListMessage.value = await articleStore.getArticleMessage()
 
-function handleClickHeart(i: number) {
-  if (heartRef.value) {
-    if (heartRef.value.style.color === 'red') {
-      heartRef.value.style.color = 'grey';
-    } else {
-      heartRef.value.style.color = 'red';
-    }
+}
+
+async function handleClickHeart(article_id: number, if_like: boolean) {
+  if (if_like) {
+    await articleStore.unlikeArticleAction(article_id)
+    reloadArticleMessage()
+  } else {
+    await articleStore.likeArticleAction(article_id)
+    reloadArticleMessage()
   }
 }
 
-import { useArticleStore } from '@/stores/article'
-const articleStore = useArticleStore()
-const articleListMessage = ref<articleItemForm[]>([])
-
 interface articleItemForm {
-  title: string;
-  creat_time: Date;
-  category: string;
-  file_path: string;
   id: number;
+  title: string;
+  category: string;
+  category_id: number;
+  creat_time: Date;
+  md_file_path: string;
+  img_file_path: string;
+  display_time?: string | null;
   description: string;
+  like_number: number;
   comment_number: number;
+  md_file_len: number;
+  if_like: boolean;
 }
 
 onMounted(async () => {
@@ -68,6 +82,10 @@ onMounted(async () => {
 })
 
 
+// 点击图片或者标题，跳转到文章页面
+const handleClickArticle = (article_id: number) => {
+  router.push(`/article/${article_id}`)
+}
 
 
 
@@ -93,8 +111,8 @@ onMounted(async () => {
 .article_card_container {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  grid-auto-rows: minmax(25rem, 1.5fr);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, .5fr));
+  grid-auto-rows: minmax(25rem, 25rem);
   /* 最小列宽300px */
   gap: 1.25rem;
   /* 横向和纵向间距统一 */
@@ -172,8 +190,14 @@ onMounted(async () => {
     .heart {
       display: inline;
       cursor: pointer;
-      color: none;
     }
+
+    .heart_active {
+      display: inline;
+      cursor: pointer;
+      color: red;
+    }
+
   }
 }
 

@@ -8,3 +8,28 @@ export const getArticle = (page: number = 1, per_page: number = 6) => {
     method: 'get',
   })
 }
+
+export const likeArticle = (article_id: number) => {
+  return request({
+    url: '/article/like',
+    method: 'post',
+    data: {
+      'article_id': article_id
+    }
+  })
+
+}
+
+export const unlikeArticle = (article_id: number) => {
+  return request({
+    url: `/article/like?article_id=${article_id}`,
+    method: 'delete',
+  })
+}
+
+export const getArticleById = (id: number) => {
+  return request({
+    url: `/article/getArticleById?id=${id}`,
+    method: 'get',
+  })
+}

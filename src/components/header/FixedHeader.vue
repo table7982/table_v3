@@ -123,12 +123,12 @@ function handleClickLogin() {
 }
 
 .header_container {
-  position: fixed;
+  position: sticky;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-
+  z-index: 99;
   top: 0;
   width: 100vw;
   transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;

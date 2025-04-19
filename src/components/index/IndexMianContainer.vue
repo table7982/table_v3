@@ -50,7 +50,6 @@
       </div>
 
       <ArticleCardContainer />
-      <ArticleCardContainer />
     </div>
 
   </div>

@@ -5,9 +5,9 @@ import router from '../router'
 const request = axios.create({
   baseURL: 'http://127.0.0.1:5000/my_api',
   timeout: 5000,
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  }
+  // headers: {
+  //   'Content-Type': 'application/x-www-form-urlencoded'
+  // }
 })
 
 // 请求拦截器
@@ -19,7 +19,7 @@ request.interceptors.request.use(
       console.log('发送的 token:', token)
     }
     // 将请求数据转换为表单格式
-    if (config.method === 'post') {
+    if (config.method === 'post' && !(config.data instanceof FormData)) {
       const params = new URLSearchParams()
       for (const key in config.data) {
         params.append(key, config.data[key])
@@ -27,6 +27,7 @@ request.interceptors.request.use(
       config.data = params.toString()
     }
     console.log('请求配置:', config)
+
     return config
   },
   error => {
@@ -43,7 +44,7 @@ request.interceptors.response.use(
       ElMessage.error(res.message || '请求失败')
       if (res.code === 401) {
         localStorage.removeItem('token')
-        window.location.href = '/login'
+        window.location.href = '/#/login'
       }
       return Promise.reject(new Error(res.message || '请求失败'))
     }
@@ -57,7 +58,7 @@ request.interceptors.response.use(
 
       if (error.response.status === 401) {
         localStorage.removeItem('token')
-        window.location.href = '/login'
+        window.location.href = '/#/login'
       } else if (error.response.status === 403) {
         ElMessage.error('没有权限访问')
       } else if (error.response.status === 404) {

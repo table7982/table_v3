@@ -3,8 +3,7 @@
   <IndexImgSlider />
   <IndexPrefaceSlider />
   <IndexMianContainer />
-  <div class="test_content">这是测试内容</div>
-  <div class="test_content">这是测试内容</div>
+
 </template>
 
 <script setup lang='ts' name='Index'>
