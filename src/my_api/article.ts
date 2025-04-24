@@ -33,3 +33,14 @@ export const getArticleById = (id: number) => {
     method: 'get',
   })
 }
+
+export const sentComment = (id: number, content: string) => {
+  return request({
+    url: `/comment/comment`,
+    method: 'post',
+    data: {
+      'article_id': id,
+      'content': content
+    }
+  })
+}

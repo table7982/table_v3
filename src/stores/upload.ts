@@ -14,11 +14,14 @@ export const useUploadStore = defineStore('upload', () => {
       const res: any = await uploadArticle(data)
       if (res.code === 200) {
         ElMessage.success(res.message || "发布文章成功")
+        return res.code
       } else {
         ElMessage.error(res.message || "发布文章失败")
+        return res.code
       }
     } catch (error: any) {
       console.error(error)
+      return 400
     }
   }
 

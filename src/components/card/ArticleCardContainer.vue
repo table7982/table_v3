@@ -6,7 +6,7 @@
     <div class="article_card_container">
       <div class="card article_card" v-for="article in articleListMessage" :key="article.id">
         <div class="elment_img_container">
-          <el-image :src="article.img_file_path" fit="cover" class="img_class"
+          <el-image :src="article.cover_web_path" fit="cover" class="img_class"
             @click="handleClickArticle(article.id)"></el-image>
         </div>
         <div class="card_message_container">
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="base_message_container">
-          Aa:&nbsp;{{ article.md_file_len }} &nbsp;&nbsp;&nbsp;
+          Aa:&nbsp;{{ article.text_len }} &nbsp;&nbsp;&nbsp;
           <p class="heart" @click="handleClickHeart(article.id, article.if_like)"
             :class="{ 'heart_active': article.if_like }">
             &hearts;</p>
@@ -48,7 +48,6 @@ const articleStore = useArticleStore()
 const articleListMessage = ref<articleItemForm[]>([])
 const reloadArticleMessage = async () => {
   articleListMessage.value = await articleStore.getArticleMessage()
-
 }
 
 async function handleClickHeart(article_id: number, if_like: boolean) {
@@ -67,14 +66,16 @@ interface articleItemForm {
   category: string;
   category_id: number;
   creat_time: Date;
-  md_file_path: string;
-  img_file_path: string;
   display_time?: string | null;
   description: string;
   like_number: number;
   comment_number: number;
-  md_file_len: number;
+  author_name: string;
+  author_id: string;
+  text_len: number;
+  cover_web_path: string;
   if_like: boolean;
+
 }
 
 onMounted(async () => {

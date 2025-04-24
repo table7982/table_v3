@@ -126,7 +126,6 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   border-radius: 0.8rem;
   box-shadow: 0 0.2rem 1.2rem rgba(0, 0, 0, 0.08);
   margin: 0 auto;
-
 }
 
 .form-item {

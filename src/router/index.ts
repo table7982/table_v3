@@ -5,6 +5,7 @@ import Register from '@/views/Register.vue'
 import Upload from '@/views/Upload.vue'
 import UploadArticle from '@/components/upload/UploadArticle.vue'
 import ArticleShow from '@/views/ArticleShow.vue'
+import UploadWebArticle from '@/components/upload/UploadWebArticle.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -37,7 +38,13 @@ const router = createRouter({
         {
           path: '/upload/article',
           component: UploadArticle,
-        }
+
+        },
+        {
+          path: '/upload/webarticle',
+          component: UploadWebArticle,
+
+        },
       ]
     },
   ],

@@ -6,10 +6,10 @@
         上传类型
       </el-menu-item>
       <el-menu-item index="/upload/article" class="el_menu_item">
-        文章
+        本地文件
       </el-menu-item>
-      <el-menu-item index="/upload" class="el_menu_item">
-        图片
+      <el-menu-item index="/upload/webarticle" class="el_menu_item">
+        网页编辑
       </el-menu-item>
     </el-menu>
   </div>

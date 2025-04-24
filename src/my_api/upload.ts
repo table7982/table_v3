@@ -7,30 +7,35 @@ import { da } from 'element-plus/es/locales.mjs';
 export interface uploadArticleForm {
   description: string;
   title: string;
+  content: string;
+  text_len: number;
   category_id: number;
-  md_file: File;
   cover_img_file: File;
   display_time?: string;
+  music_id?: number;
 }
 
 
 export const uploadArticle = (data: uploadArticleForm) => {
   const formData = new FormData()
   // 附加文件字段
-  const mdFile = new File([data.md_file], data.md_file.name, {
-    type: 'text/markdown'
-  });
-  formData.append('md_file', mdFile, mdFile.name)
+
   formData.append('cover_img_file', data.cover_img_file)
 
   // 附加其他字段
   formData.append('title', data.title)
   formData.append('description', data.description)
-  formData.append('category_id', data.category_id.toString()) // 转换为字符串
+  formData.append('content', data.content)
+  formData.append('text_len', data.text_len.toString())
+  formData.append('category_id', data.category_id.toString())
 
   // 处理可选字段
   if (data.display_time) {
     formData.append('display_time', data.display_time)
+  }
+
+  if (data.music_id) {
+    formData.append('music_id', data.music_id.toString())
   }
 
 

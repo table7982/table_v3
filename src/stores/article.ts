@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getArticle, getArticleById, likeArticle, unlikeArticle } from '../my_api/article'
+import { getArticle, getArticleById, likeArticle, unlikeArticle, sentComment } from '../my_api/article'
 import { ElMessage } from 'element-plus'
 import router from '../router'
 import axios from 'axios'
+import { ca } from 'element-plus/es/locales.mjs'
 
 export const useArticleStore = defineStore('article', () => {
 
@@ -52,7 +53,7 @@ export const useArticleStore = defineStore('article', () => {
     try {
       const res: any = await getArticleById(article_id)
       if (res.code === 200) {
-        ElMessage.success("获取文章成功")
+        // ElMessage.success("获取文章成功")
         return res.data
       } else {
         ElMessage.error("获取文章失败")
@@ -61,12 +62,28 @@ export const useArticleStore = defineStore('article', () => {
       ElMessage.error("获取文章失败")
     }
   }
+  
+  const sentCommentAction = async (article_id: number, content: string) => {
+    try {
+      const res: any = await sentComment(article_id, content)
+      if (res.code === 200) {
+        ElMessage.success("发表评论成功")
+        return res.code
+      } else {
+        ElMessage.error("发表评论失败")
+        return res.code
+      }
+    } catch (error: any) {
+      ElMessage.error("发表评论失败")
+    }
+  }
 
 
   return {
     getArticleMessage,
     likeArticleAction,
     unlikeArticleAction,
-    getArticleByIdAction
+    getArticleByIdAction,
+    sentCommentAction
   }
 })
