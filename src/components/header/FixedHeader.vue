@@ -132,7 +132,7 @@ function handleClickLogin() {
   top: 0;
   width: 100vw;
   transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .header_container:hover {

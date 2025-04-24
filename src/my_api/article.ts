@@ -43,4 +43,26 @@ export const sentComment = (id: number, content: string) => {
       'content': content
     }
   })
+
+}
+
+export const deleteComment = (comment_id: number) => {
+  return request({
+    url: `/comment/comment?comment_id=${comment_id}`,
+    method: 'delete',
+  })
+}
+
+export const getAllCategory = () => {
+  return request({
+    url: `/article/category`,
+    method: 'get',
+  })
+}
+
+export const getCategoryContent = (category_id: number) => {
+  return request({
+    url: `/article/category?category_id=${category_id}`,
+    method: 'get',
+  })
 }

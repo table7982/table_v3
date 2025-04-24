@@ -35,14 +35,28 @@
     </div>
   </div>
   <hr>
-  <div class="commentContainer markdown-body" :class="{ 'display_comment': !if_have_comment }">
+  <div class="commentContainer markdown-body" v-if="articleMessage?.comments[0]">
 
     <h2>评论列表({{ articleMessage?.comment_number }})：</h2>
     <div class="commentItemContainer" v-for="comment in articleMessage?.comments" :key="comment.id">
       <div class="commenterName">{{ comment.commenter_name }}&nbsp;:</div>
       {{ comment.content }}
-      <div class="commentCreatTime"> {{ comment.creat_time }}</div>
+      <div class="commentCreatTime">
+        <div>{{ comment.creat_time }}</div>
+        <div><svg t="1745457640451" class="delete_icon" viewBox="0 0 1024 1024" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" p-id="4275" width="2rem" height="2rem"
+            @click="handle_delete_click(comment.id)">
+            <path
+              d="M256 343.472a19.2 19.2 0 0 1 19.2 19.2V768a66.128 66.128 0 0 0 66.144 66.128h341.328A66.128 66.128 0 0 0 748.8 768V362.672a19.2 19.2 0 1 1 38.4 0V768a104.528 104.528 0 0 1-104.528 104.528H341.328A104.528 104.528 0 0 1 236.8 768V362.672a19.2 19.2 0 0 1 19.2-19.2zM405.344 260.048a19.2 19.2 0 0 0 19.2-19.2 66.128 66.128 0 0 1 66.128-66.144h42.656a66.128 66.128 0 0 1 66.144 66.144 19.2 19.2 0 1 0 38.4 0 104.528 104.528 0 0 0-103.04-104.528h-45.648a104.544 104.544 0 0 0-103.04 104.528 19.2 19.2 0 0 0 19.2 19.2z"
+              fill="#ccc" p-id="4276"></path>
+            <path
+              d="M172.8 266.672a19.2 19.2 0 0 1 19.2-19.2h640a19.2 19.2 0 1 1 0 38.4H192a19.2 19.2 0 0 1-19.2-19.2zM426.672 380.8a19.2 19.2 0 0 1 19.2 19.2v320a19.2 19.2 0 1 1-38.4 0V400a19.2 19.2 0 0 1 19.2-19.2zM597.344 380.8a19.2 19.2 0 0 1 19.2 19.2v320a19.2 19.2 0 0 1-38.4 0V400a19.2 19.2 0 0 1 19.2-19.2z"
+              fill="#ccc" p-id="4277"></path>
+          </svg></div>
+      </div>
+
     </div>
+
   </div>
 
 </template>
@@ -104,7 +118,6 @@ const articleMessage = ref<articleDetailForm | null>(null)
 onMounted(async () => {
   try {
     articleMessage.value = await articleStore.getArticleByIdAction(param_id_number)
-    console.log(articleMessage.value?.id)
     loadAndRenderMarkdown(articleMessage.value?.content)
     if (articleMessage.value?.comments[0]) {
       if_have_comment.value = true
@@ -140,7 +153,6 @@ const handleCommentSubmit = async (article_id: number) => {
     commentContent.value = ''
     try {
       articleMessage.value = await articleStore.getArticleByIdAction(param_id_number)
-      console.log(articleMessage.value?.id)
       loadAndRenderMarkdown(articleMessage.value?.content)
       if (articleMessage.value?.comments[0]) {
         if_have_comment.value = true
@@ -153,6 +165,27 @@ const handleCommentSubmit = async (article_id: number) => {
     sendingComment.value = false
   }
 
+}
+
+const handle_delete_click = async (comment_id: number) => {
+  try {
+    const res = await articleStore.deleteCommentAction(comment_id)
+    if (res === 200) {
+      try {
+        articleMessage.value = await articleStore.getArticleByIdAction(param_id_number)
+        loadAndRenderMarkdown(articleMessage.value?.content)
+        if (articleMessage.value?.comments[0]) {
+          if_have_comment.value = true
+        }
+      } catch {
+        ElMessage.error("删除失败")
+      }
+    } else {
+      ElMessage.error("删除失败")
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 
@@ -182,6 +215,13 @@ const handleCommentSubmit = async (article_id: number) => {
 
   .commentCreatTime {
     font-size: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .delete_icon {
+      cursor: pointer;
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getArticle, getArticleById, likeArticle, unlikeArticle, sentComment } from '../my_api/article'
+import { getArticle, getArticleById, likeArticle, unlikeArticle, sentComment, deleteComment, getAllCategory, getCategoryContent } from '../my_api/article'
 import { ElMessage } from 'element-plus'
 import router from '../router'
 import axios from 'axios'
@@ -62,7 +62,7 @@ export const useArticleStore = defineStore('article', () => {
       ElMessage.error("获取文章失败")
     }
   }
-  
+
   const sentCommentAction = async (article_id: number, content: string) => {
     try {
       const res: any = await sentComment(article_id, content)
@@ -78,12 +78,58 @@ export const useArticleStore = defineStore('article', () => {
     }
   }
 
+  const deleteCommentAction = async (comment_id: number) => {
+    try {
+      const res: any = await deleteComment(comment_id)
+      if (res.code === 200) {
+        ElMessage.success("删除评论成功")
+        return res.code
+      } else {
+        ElMessage.error("删除评论失败")
+        return res.code
+      }
+    } catch (error: any) {
+      ElMessage.error("删除评论失败")
+    }
+  }
+
+  const getAllCategoryAction = async () => {
+    try {
+      const res: any = await getAllCategory()
+      if (res.code === 200) {
+        return res
+      } else {
+        ElMessage.error("获取分类失败")
+        return res
+      }
+    } catch (error: any) {
+      ElMessage.error("获取分类失败")
+    }
+  }
+
+  const getCategoryContentAction = async (category_id: number) => {
+    try {
+      const res: any = await getCategoryContent(category_id)
+      if (res.code === 200) {
+        return res
+      } else {
+        ElMessage.error("获取分类失败")
+        return res
+      }
+    } catch (error: any) {
+      ElMessage.error("获取分类失败")
+    }
+  }
+
 
   return {
     getArticleMessage,
     likeArticleAction,
     unlikeArticleAction,
     getArticleByIdAction,
-    sentCommentAction
+    sentCommentAction,
+    deleteCommentAction,
+    getAllCategoryAction,
+    getCategoryContentAction
   }
 })

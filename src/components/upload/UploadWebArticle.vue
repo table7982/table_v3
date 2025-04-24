@@ -61,7 +61,7 @@
       :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
   </div>
 
-  <el-button @click=console_str>asd</el-button>
+
 </template>
 
 <script setup lang='ts' name='UploadWebArticle'>

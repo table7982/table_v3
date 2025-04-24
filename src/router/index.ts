@@ -6,6 +6,7 @@ import Upload from '@/views/Upload.vue'
 import UploadArticle from '@/components/upload/UploadArticle.vue'
 import ArticleShow from '@/views/ArticleShow.vue'
 import UploadWebArticle from '@/components/upload/UploadWebArticle.vue'
+import Category from '@/views/Category.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -30,6 +31,10 @@ const router = createRouter({
     {
       path: '/article/:id',
       component: ArticleShow
+    },
+    {
+      path: '/category/:id',
+      component: Category
     },
     {
       path: '/upload',

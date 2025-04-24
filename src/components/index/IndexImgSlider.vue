@@ -40,13 +40,6 @@ const img_message_list = [
     "img_discribe": "写在前面",
     "img_article_id": 1
   },
-  {
-    "id": 4,
-    "img_file_path": "/about_design_cover.png",
-    "cover_color_rgb": [100, 100, 100],
-    "img_discribe": "写在前面",
-    "img_article_id": 1
-  },
 ]
 
 

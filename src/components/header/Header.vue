@@ -10,17 +10,13 @@
         <RouterLink to="/index">首页</RouterLink>
       </li>
       <li class="header_li note_item" ref="noteRef">
-        随记
+        分类
         <div class="note_list_container">
-          <RouterLink to="/index">
-            <div class="note_list_item">生活</div>
-          </RouterLink>
-          <RouterLink to="/index">
-            <div class="note_list_item">旅行(开发中)</div>
-          </RouterLink>
-          <RouterLink to="/index">
-            <div class="note_list_item">思考</div>
-          </RouterLink>
+          <div v-for="categoryItem in categoryList" :key="categoryItem.id">
+            <div class="note_list_item" @click="handleClickCategory(categoryItem.id)">
+              {{ categoryItem.name }}
+            </div>
+          </div>
         </div>
 
       </li>
@@ -85,8 +81,13 @@ onUnmounted(() => {
 const noteRef = ref<HTMLElement | null>(null)
 
 import { useVisitorStore } from '@/stores/visitor';
+import { useArticleStore } from '@/stores/article';
 import type { RefSymbol } from '@vue/reactivity';
 import { ElMessage } from 'element-plus';
+import Category from '@/views/Category.vue';
+import { ca } from 'element-plus/es/locales.mjs';
+
+const articleStore = useArticleStore()
 
 function handleClickLogin() {
   if (visitorStore.token && visitorStore.visitorInfo) {
@@ -99,7 +100,27 @@ function handleClickLogin() {
   }
 }
 
+interface categoryListForm {
+  id: number;
+  name: string;
+  level: number;
+}
 
+const categoryList = ref<categoryListForm[]>([])
+
+
+onMounted(async () => {
+  const res = await articleStore.getAllCategoryAction()
+  if (res.code === 200) {
+    categoryList.value = res.data
+  } else {
+    ElMessage("获取分类失败")
+  }
+})
+
+const handleClickCategory = (category_id: number) => {
+  router.push(`/category/${category_id}`)
+}
 
 
 
