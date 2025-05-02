@@ -8,15 +8,17 @@ import 'element-plus/dist/index.css'
 
 import App from './App.vue'
 import router from './router'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 const app = createApp(App)
-import zhCn from 'element-plus/es/locale/lang/zh-cn'
+app.use(createPinia())
+
 
 app.use(ElementPlus, {
   locale: zhCn,
 })
 
-app.use(createPinia())
+
 app.use(router)
 
 app.mount('#app')

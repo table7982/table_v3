@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { login, register, getEmailCaptcha, getVisitorMessage } from '../my_api/visitor'
+import { login, register, getEmailCaptcha, getVisitorMessage, getWebMessage } from '../my_api/visitor'
 import type { LoginForm, RegisterForm } from '../my_api/visitor'
 import { ElMessage } from 'element-plus'
 import router from '../router'
@@ -10,6 +10,7 @@ import axios from 'axios'
 export const useVisitorStore = defineStore('visitor', () => {
   const token = ref(localStorage.getItem('token') || '')
   const visitorInfo = ref<any>(null)
+  const webMessage = ref<any>(null)
 
   const sendEmailCaptcha = async (email: string) => {
     try {
@@ -84,16 +85,36 @@ export const useVisitorStore = defineStore('visitor', () => {
     } catch (error: any) {
       ElMessage.error(error.message || '登录失败')
       console.error('登录失败:', error)
+      router.push("/login")
+    }
+  }
+
+  const getWebMessageAction = async () => {
+    try {
+      const res: any = await getWebMessage()
+      if (res.code === 200) {
+        webMessage.value = {
+          "article_number": res.data.article_number,
+          "visitor_number": res.data.visitor_number,
+          "category_number": res.data.category_number,
+        }
+      }
+    } catch (error: any) {
+      ElMessage.error(error.message || '获取网站信息失败')
+      console.error('获取网站信息失败:', error)
     }
   }
 
   return {
     token,
     visitorInfo,
+    webMessage,
+
     sendEmailCaptcha,
     registerAction,
     loginAction,
     logout,
     getVisitorInfo,
+    getWebMessageAction
   }
 })

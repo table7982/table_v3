@@ -2,37 +2,49 @@
   <div class="header_container" ref="headerRef" :class="{ 'hidden': !isMenuVisible }">
 
     <RouterLink to="/index" class="logo_container">
-      <img src="../../../logo_white.png" class="logo"></img>
+      <img :src='`${url}/static/logo_white.png`' class="logo"></img>
     </RouterLink>
 
     <ul class="header_ul">
       <li class="header_li">
         <RouterLink to="/index">首页</RouterLink>
       </li>
-      <li class="header_li note_item" ref="noteRef">
-        随记
-        <div class="note_list_container">
-          <RouterLink to="/index">
-            <div class="note_list_item">生活</div>
-          </RouterLink>
-          <RouterLink to="/index">
-            <div class="note_list_item">旅行(开发中)</div>
-          </RouterLink>
-          <RouterLink to="/index">
-            <div class="note_list_item">思考</div>
-          </RouterLink>
-        </div>
 
+      <li class="header_li note_item" ref="noteRef">
+        分类
+        <div class="note_list_container">
+          <div v-for="categoryItem in categoryList" :key="categoryItem.id">
+            <div class="note_list_item" @click="handleClickCategory(categoryItem.id)">
+              {{ categoryItem.name }}
+            </div>
+          </div>
+        </div>
       </li>
+
       <li class="header_li">
-        <RouterLink to="/index">作品</RouterLink>
+        <RouterLink to="/advice">留言</RouterLink>
       </li>
-      <li class="header_li">
-        <RouterLink to="/upload">上传</RouterLink>
+
+      <li class="header_li note_item" ref="noteRef">
+        其他
+        <div class="note_list_container">
+          <RouterLink to="/upload">
+            <div class="note_list_item">
+              上传
+            </div>
+          </RouterLink>
+          <RouterLink to="/letter">
+            <div class="note_list_item">
+              来信
+            </div>
+          </RouterLink>
+
+        </div>
       </li>
     </ul>
     <div class="login_container" @click="handleClickLogin">
-      <div class="login_stuation_text">{{ visitorStore.visitorInfo ? visitorStore.visitorInfo.username : "登录" }}</div>
+      <div class="login_stuation_text">{{ visitorStore.visitorInfo ? visitorStore.visitorInfo.username[0] : "登录" }}
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +53,7 @@
 import { RouterLink, onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import router from '@/router';
+import url from '@/my_api/config';
 const visitorStore = useVisitorStore()
 
 
@@ -85,8 +98,13 @@ onUnmounted(() => {
 const noteRef = ref<HTMLElement | null>(null)
 
 import { useVisitorStore } from '@/stores/visitor';
+import { useArticleStore } from '@/stores/article';
 import type { RefSymbol } from '@vue/reactivity';
 import { ElMessage } from 'element-plus';
+import Category from '@/views/Category.vue';
+import { ca } from 'element-plus/es/locales.mjs';
+
+const articleStore = useArticleStore()
 
 function handleClickLogin() {
   if (visitorStore.token && visitorStore.visitorInfo) {
@@ -99,7 +117,27 @@ function handleClickLogin() {
   }
 }
 
+interface categoryListForm {
+  id: number;
+  name: string;
+  level: number;
+}
 
+const categoryList = ref<categoryListForm[]>([])
+
+
+onMounted(async () => {
+  const res = await articleStore.getAllCategoryAction()
+  if (res.code === 200) {
+    categoryList.value = res.data
+  } else {
+    ElMessage("获取分类失败")
+  }
+})
+
+const handleClickCategory = (category_id: number) => {
+  router.push(`/category/${category_id}`)
+}
 
 
 
@@ -128,7 +166,8 @@ function handleClickLogin() {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  z-index: 99;
+  z-index: 999;
+
   top: 0;
   width: 100vw;
   transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;

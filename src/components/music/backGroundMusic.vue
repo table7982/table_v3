@@ -1,5 +1,5 @@
 <template>
-  <div v-if="musicUrlRef">
+  <div v-if="musicUrlRef" class="container">
     <div class="indicaterAllContainer" @click="closeIndicater">
       <div class="indicaterBox">
         <p class="indicaterText">X&nbsp;点下方播放音乐</p>
@@ -110,6 +110,10 @@ watch(isPlaying, (new_isPlaying) => {
 </script>
 
 <style scoped>
+.container {
+  z-index: 9999;
+}
+
 .indicaterAllContainer {
   opacity: 0.6;
   width: 4.5rem;

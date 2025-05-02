@@ -5,11 +5,14 @@
       <el-menu-item index="/upload" class="el_menu_item">
         上传类型
       </el-menu-item>
-      <el-menu-item index="/upload/article" class="el_menu_item">
-        本地文件
+      <el-menu-item index="/manage" class="el_menu_item">
+        资源管理
       </el-menu-item>
       <el-menu-item index="/upload/webarticle" class="el_menu_item">
-        网页编辑
+        文章上传
+      </el-menu-item>
+      <el-menu-item index="/upload/edit/article" class="el_menu_item">
+        文章修改
       </el-menu-item>
     </el-menu>
   </div>

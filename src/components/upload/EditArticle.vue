@@ -1,6 +1,16 @@
 <template>
   <el-form :model="uploadArticleElForm" class="elment_form_container">
-    <h2 class="title">文章提交表单</h2>
+    <h2 class="title">文章修改</h2>
+    <div class="form-item">
+      <label>文章id:</label>
+      <el-form-item style="max-width: 40rem;">
+        <el-input v-model="uploadArticleElForm.article_id" placeholder="请添加标题" />
+        <br>
+        <br>
+        <el-button @click="handleClickGetArticle(uploadArticleElForm.article_id)">文章获取</el-button>
+      </el-form-item>
+    </div>
+
     <div class="form-item">
       <label>标题:</label>
       <el-form-item style="max-width: 40rem;">
@@ -13,7 +23,6 @@
         <el-input v-model="uploadArticleElForm.description" placeholder="请添加描述" />
       </el-form-item>
     </div>
-
     <div class="form-item">
       <label>分类id:</label>
       <el-form-item style="max-width: 40rem;">
@@ -24,7 +33,7 @@
     <div class="form-item">
       <label>分类名称:</label>
       <el-form-item style="max-width: 40rem;">
-        <el-select v-model="uploadArticleElForm.category_id" placeholder="请选择分类">
+        <el-select v-model="uploadArticleElForm.category_id" placeholder="请选择城市">
           <el-option v-for="category in categoryOptions" :key="category.id" :label="category.name"
             :value="category.id" />
         </el-select>
@@ -41,7 +50,7 @@
     <div class="form-item">
       <label>音乐名称:</label>
       <el-form-item style="max-width: 40rem;">
-        <el-select v-model="uploadArticleElForm.music_id" placeholder="请选择音乐">
+        <el-select v-model="uploadArticleElForm.music_id" placeholder="请选择城市">
           <el-option v-for="music in musicOptions" :key="music.id" :label="music.name" :value="music.id" />
         </el-select>
       </el-form-item>
@@ -80,7 +89,6 @@
     <Editor style="height: 70vh; overflow-y: hidden;" v-model="uploadArticleElForm.content"
       :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
   </div>
-
 
 </template>
 
@@ -134,9 +142,7 @@ if (editorConfig.MENU_CONF !== undefined) {
   }
 }
 
-// const console_str = () => {
-//   console.log(editorRef.value.getText().length)
-// }
+
 
 
 // 表单提交
@@ -145,9 +151,10 @@ import type { UploadFile } from 'element-plus'
 import { uploadArticle } from '@/my_api/upload';
 import { Plus } from '@element-plus/icons-vue';
 import { useUploadStore } from '@/stores/upload';
+import { useArticleStore } from '@/stores/article'
 const uploadRef = ref()
 
-
+const articleStore = useArticleStore()
 const uploadStore = useUploadStore()
 const uploadArticleElForm = reactive({
   title: '',
@@ -157,7 +164,8 @@ const uploadArticleElForm = reactive({
   display_time: undefined,
   content: '',
   text_len: 0,
-  music_id: undefined
+  music_id: undefined,
+  article_id: -1
 })
 
 watch(() => uploadArticleElForm.content, () => {
@@ -171,9 +179,8 @@ const handleCoverImgfileChange = (file: UploadFile) => {
 const uploading = ref(false)
 const handleSubmitArticle = async () => {
   uploading.value = true
-  const res = await uploadStore.uploadArticleAction(uploadArticleElForm)
+  const res = await uploadStore.editArticleAction(uploadArticleElForm)
   if (res === 200) {
-    ElMessage.success("提交文章成功")
     uploadArticleElForm.content = ''
     uploadArticleElForm.title = ''
     uploadArticleElForm.cover_img_file = null as unknown as File
@@ -189,6 +196,8 @@ const handleSubmitArticle = async () => {
 import { genFileId } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import axios from 'axios';
+import { id } from 'element-plus/es/locales.mjs'
+import { useRoute } from 'vue-router'
 
 const upload = ref<UploadInstance>()
 
@@ -199,13 +208,33 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   uploadRef.value!.handleStart(file)
 }
 
+const handleClickGetArticle = async (id: number) => {
+  const res = await articleStore.getArticleByIdAction(id)
+  uploadArticleElForm.title = res.title
+  uploadArticleElForm.description = res.description
+  uploadArticleElForm.category_id = res.category_id
+  uploadArticleElForm.display_time = res.category_id
+  uploadArticleElForm.content = res.content
+  uploadArticleElForm.text_len = res.text_len
+  uploadArticleElForm.music_id = res.music_id
+  uploadArticleElForm.article_id = res.id
+}
+
+const route = useRoute();
+const param_id = route.params.id;
+const param_id_number = Number(param_id);
+onMounted(async () => {
+  loadOptions()
+  if (param_id_number) {
+    uploadArticleElForm.article_id = param_id_number
+    handleClickGetArticle(uploadArticleElForm.article_id)
+  }
+})
+
 
 // option加载
 const categoryOptions = ref<categoryOptionsItemForm[]>([])
 const musicOptions = ref<musicOptionsItemForm[]>([])
-
-import { useArticleStore } from '@/stores/article'
-const articleStore = useArticleStore()
 
 interface categoryOptionsItemForm {
   id: number;
@@ -228,9 +257,6 @@ const loadOptions = async () => {
   }
 }
 
-onMounted(() => {
-  loadOptions()
-})
 
 </script>
 

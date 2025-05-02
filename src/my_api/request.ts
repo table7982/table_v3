@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '../router'
+import url from '@/my_api/config'
 
 const request = axios.create({
-  baseURL: 'http://127.0.0.1:5000/my_api',
+  baseURL: `${url}/my_api`,
   timeout: 5000,
   // headers: {
   //   'Content-Type': 'application/x-www-form-urlencoded'

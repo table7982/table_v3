@@ -53,4 +53,11 @@ export const getVisitorMessage = () => {
     url: '/visitor/visitor',
     method: 'get'
   })
+}
+
+export const getWebMessage = () => {
+  return request({
+    url: '/visitor/web/message',
+    method: 'get'
+  })
 } 

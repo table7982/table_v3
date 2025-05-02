@@ -1,6 +1,5 @@
-import ExpandIcon from 'element-plus/es/components/table-v2/src/components/expand-icon.mjs'
+
 import request from './request'
-import { da } from 'element-plus/es/locales.mjs'
 
 export const getArticle = (page: number = 1, per_page: number = 6) => {
   return request({
@@ -66,3 +65,40 @@ export const getCategoryContent = (category_id: number) => {
     method: 'get',
   })
 }
+
+export const deleteArticle = (article_id: number) => {
+  return request({
+    url: `/article/article?article_id=${article_id}`,
+    method: 'delete',
+  })
+}
+
+export const getAllMusic = () => {
+  return request({
+    url: `/music/music`,
+    method: 'get',
+  })
+}
+
+export const deleteMusic = (music_id: number) => {
+  return request({
+    url: `/music/music?music_id=${music_id}`,
+    method: 'delete',
+  })
+}
+
+export const getFlattenedCategory = () => {
+  return request({
+    url: `/article/category/flattened`,
+    method: 'get',
+  })
+}
+
+export const deleteCategory = (category_id: number) => {
+  return request({
+    url: `/article/category?category_id=${category_id}`,
+    method: 'delete',
+  })
+}
+
+

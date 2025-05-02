@@ -3,26 +3,29 @@
     <div class="left_side">
 
       <div class="card my_message">
-        <img src="/my_head_img.jpg" alt="头像" class="my_head_img">
-        <p style="font-size: 2rem;
+        <div class="my_head_img">
+          <div> {{ visitorStore.visitorInfo ? visitorStore.visitorInfo.username[0] : "访客" }}</div>
+        </div>
+        <p style="font-size: 1.5rem;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-weight: bold;
         margin: .6rem;">
-          table
+          {{ visitorStore.visitorInfo ? visitorStore.visitorInfo.username : "未登录" }}
         </p>
+
         <div>
           <div class="my_message_bottom">
             <div class="base_message_item">
               <p>分类</p>
-              <p>3</p>
+              <p>{{ visitorStore.webMessage ? visitorStore.webMessage.category_number : 0 }}</p>
             </div>
             <div class="base_message_item">
               <p>文章</p>
-              <p>0</p>
+              <p>{{ visitorStore.webMessage ? visitorStore.webMessage.article_number : 0 }}</p>
             </div>
             <div class="base_message_item">
               <p>用户数量</p>
-              <p>1</p>
+              <p>{{ visitorStore.webMessage ? visitorStore.webMessage.visitor_number : 0 }}</p>
             </div>
           </div>
         </div>
@@ -46,9 +49,8 @@
 
     <div class="right_side">
       <div class="right_side_discribe">
-        欢迎来到本站!
+        你好！{{ visitorStore.visitorInfo ? visitorStore.visitorInfo.username : "盆友" }}，欢迎来到本站!
       </div>
-
       <ArticleCardContainer />
     </div>
 
@@ -56,11 +58,14 @@
 </template>
 
 <script setup lang='ts' name='IndexMianContainer'>
+import { onMounted } from 'vue';
 import ArticleCardContainer from '../card/ArticleCardContainer.vue';
 import ArticleCard from '../card/ArticleCardContainer.vue';
-
-
-
+import { useVisitorStore } from '@/stores/visitor';
+const visitorStore = useVisitorStore()
+onMounted(async () => {
+  await visitorStore.getWebMessageAction()
+})
 </script>
 
 <style scoped>
@@ -119,6 +124,22 @@ import ArticleCard from '../card/ArticleCardContainer.vue';
     cursor: pointer;
     margin-bottom: 1rem;
     box-shadow: 0rem .2rem .5rem .2rem rgba(111, 111, 111, 0.7);
+    /* 半透明底色 */
+    backdrop-filter: blur(1rem);
+    /* 背景模糊 */
+    -webkit-backdrop-filter: blur(1rem);
+    border: 0.1rem solid gray;
+    /* Safari 兼容 */
+
+    font-size: 2rem;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+
+    text-align: center;
+    justify-content: center;
+    /* 水平居中 */
+    align-items: center;
+    /* 垂直居中 */
 
 
   }

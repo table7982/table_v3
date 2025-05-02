@@ -17,25 +17,26 @@ import { onBeforeUnmount } from 'vue';
 import { ref, watch, onMounted } from 'vue';
 import useIndexImgMove from './useIndexImgMove';
 import emitter from '@/utils/emitter';
+import url from '@/my_api/config'
 
 const img_message_list = [
   {
     "id": 1,
-    "img_file_path": "/about_design_cover.png",
+    "img_file_path": `${url}/static/about_design_cover.png`,
     "cover_color_rgb": [100, 100, 100],
     "img_discribe": "写在前面",
     "img_article_id": 1
   },
   {
     "id": 2,
-    "img_file_path": "/sunset2.jpg",
+    "img_file_path": `${url}/static/sunset2.jpg`,
     "cover_color_rgb": [200, 100, 100],
     "img_discribe": "写在前面",
     "img_article_id": 1
   },
   {
     "id": 3,
-    "img_file_path": "/my_head_img.jpg",
+    "img_file_path": `${url}/static/my_head_img.jpg`,
     "cover_color_rgb": [100, 100, 100],
     "img_discribe": "写在前面",
     "img_article_id": 1

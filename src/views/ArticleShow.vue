@@ -17,7 +17,7 @@
       <br>
     </div>
     <br>
-    <div v-html="ref_result" style="margin-top: 1rem;"></div>
+    <div v-html="ref_result" style="margin-top: 1rem;" class="articleContentContainer"></div>
   </div>
   <hr>
   <div class="commentContainer markdown-body">
@@ -36,7 +36,6 @@
   </div>
   <hr>
   <div class="commentContainer markdown-body" v-if="articleMessage?.comments[0]">
-
     <h2>评论列表({{ articleMessage?.comment_number }})：</h2>
     <div class="commentItemContainer" v-for="comment in articleMessage?.comments" :key="comment.id">
       <div class="commenterName">{{ comment.commenter_name }}&nbsp;:</div>
@@ -190,6 +189,13 @@ const handle_delete_click = async (comment_id: number) => {
 </script>
 
 <style scoped>
+.articleContentContainer :deep(img) {
+  display: block;
+  margin: 0 auto;
+  width: 80% !important;
+  height: auto !important;
+}
+
 .markdown-body {
   box-sizing: border-box;
   min-width: 200px;

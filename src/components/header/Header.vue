@@ -2,13 +2,14 @@
   <div class="header_container" ref="headerRef" :class="{ 'hidden': !isMenuVisible }">
 
     <RouterLink to="/index" class="logo_container">
-      <img src="../../../logo_white.png" class="logo"></img>
+      <img :src='`${url}/static/logo_white.png`' class="logo"></img>
     </RouterLink>
 
     <ul class="header_ul">
       <li class="header_li">
         <RouterLink to="/index">首页</RouterLink>
       </li>
+
       <li class="header_li note_item" ref="noteRef">
         分类
         <div class="note_list_container">
@@ -18,17 +19,32 @@
             </div>
           </div>
         </div>
+      </li>
 
-      </li>
       <li class="header_li">
-        <RouterLink to="/index">作品</RouterLink>
+        <RouterLink to="/advice">留言</RouterLink>
       </li>
-      <li class="header_li">
-        <RouterLink to="/upload">上传</RouterLink>
+
+      <li class="header_li note_item" ref="noteRef">
+        其他
+        <div class="note_list_container">
+          <RouterLink to="/upload">
+            <div class="note_list_item">
+              上传
+            </div>
+          </RouterLink>
+          <RouterLink to="/letter">
+            <div class="note_list_item">
+              来信
+            </div>
+          </RouterLink>
+
+        </div>
       </li>
     </ul>
     <div class="login_container" @click="handleClickLogin">
-      <div class="login_stuation_text">{{ visitorStore.visitorInfo ? visitorStore.visitorInfo.username : "登录" }}</div>
+      <div class="login_stuation_text">{{ visitorStore.visitorInfo ? visitorStore.visitorInfo.username[0] : "登录" }}
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +53,7 @@
 import { RouterLink, onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import router from '@/router';
+import url from '@/my_api/config';
 const visitorStore = useVisitorStore()
 
 
@@ -149,6 +166,7 @@ const handleClickCategory = (category_id: number) => {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  z-index: 999;
 
   top: 0;
   width: 100vw;

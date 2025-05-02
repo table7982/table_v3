@@ -11,6 +11,7 @@ import Header from '@/components/header/Header.vue';
 import IndexImgSlider from '@/components/index/IndexImgSlider.vue';
 import IndexPrefaceSlider from '@/components/index/IndexPrefaceSlider.vue';
 import IndexMianContainer from '@/components/index/IndexMianContainer.vue';
+
 </script>
 
 <style scoped>

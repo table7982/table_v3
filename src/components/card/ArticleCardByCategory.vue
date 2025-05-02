@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="header">
-      <p>最近</p>
+      <p>{{ category?.name || '加载中...' }}</p>
     </div>
-    <div class="article_card_container">
+    <div class="article_card_container" v-if="articleListMessage[0]">
       <div class="card article_card" v-for="article in articleListMessage" :key="article.id">
         <div class="elment_img_container">
           <el-image :src="article.cover_web_path" fit="cover" class="img_class"
@@ -28,35 +28,67 @@
           :&nbsp;{{ article.like_number }}
           &nbsp;&nbsp;&nbsp;评论:&nbsp;{{ article.comment_number }}
         </div>
-
-
       </div>
+    </div>
 
-
-
+    <div class="article_card_container" v-if="categoryListMessage[0]">
+      <div class="card article_card" v-for="category in categoryListMessage" :key="category.category_id">
+        <div class="elment_img_container">
+          <div class="txt_class" @click="handleClickCategory(category.category_id)">
+            <img :src='`${url}/static/folder.jpg`' style="position: absolute; width: 60%;z-index: 0;">
+            <div style="z-index: 1;">{{ category.category_name }}</div>
+          </div>
+        </div>
+        <div class="card_message_container">
+          <div class="creat_time">
+            {{ category.creat_time }}
+          </div>
+          <div class="article_title">
+            {{ category.category_name }}
+          </div>
+          <div class="article_discribe">
+            {{ category.category_description }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="!(categoryListMessage[0] || articleListMessage[0])" class="none_class">
+      哦吼,这个分类下什么都没有哦！
     </div>
   </div>
+
 </template>
 
-<script setup lang='ts' name='ArticleCardContainer'>
+<script setup lang='ts' name='ArticleCardByCategory'>
 import { onMounted, ref } from 'vue'
 import { useArticleStore } from '@/stores/article'
-import { nextTick } from 'vue'
-import { el } from 'element-plus/es/locales.mjs'
 import router from '@/router'
+import url from '@/my_api/config'
+
+const { category_id } = defineProps(['category_id'])
+
 const articleStore = useArticleStore()
 const articleListMessage = ref<articleItemForm[]>([])
-const reloadArticleMessage = async () => {
-  articleListMessage.value = await articleStore.getArticleMessage()
+const categoryListMessage = ref<categoryItemForm[]>([])
+const category = ref()
+const reloadMessage = async () => {
+  console.log(666, category_id)
+  const res = await articleStore.getCategoryContentAction(category_id)
+  if (res.code === 200) {
+    articleListMessage.value = res.data.articles
+    console.log(articleListMessage.value)
+    categoryListMessage.value = res.data.category_children
+    category.value = res.data.category
+  }
 }
 
 async function handleClickHeart(article_id: number, if_like: boolean) {
   if (if_like) {
     await articleStore.unlikeArticleAction(article_id)
-    reloadArticleMessage()
+    reloadMessage()
   } else {
     await articleStore.likeArticleAction(article_id)
-    reloadArticleMessage()
+    reloadMessage()
   }
 }
 
@@ -77,14 +109,25 @@ interface articleItemForm {
   if_like: boolean;
 }
 
+interface categoryItemForm {
+  category_id: number;
+  category_name: string;
+  category_level: number;
+  creat_time: string;
+  category_description: string;
+}
+
 onMounted(async () => {
-  articleListMessage.value = await articleStore.getArticleMessage()
+  reloadMessage()
 })
 
 
 // 点击图片或者标题，跳转到文章页面
 const handleClickArticle = (article_id: number) => {
   router.push(`/article/${article_id}`)
+}
+const handleClickCategory = (category_id: number) => {
+  router.push(`/category/${category_id}`)
 }
 
 
@@ -94,7 +137,10 @@ const handleClickArticle = (article_id: number) => {
 <style scoped>
 .container {
   margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
+  max-width: 1000px;
 }
 
 .card {
@@ -111,7 +157,7 @@ const handleClickArticle = (article_id: number) => {
 .article_card_container {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, .5fr));
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
   grid-auto-rows: minmax(25rem, 25rem);
   /* 最小列宽300px */
   gap: 1.25rem;
@@ -145,6 +191,26 @@ const handleClickArticle = (article_id: number) => {
     }
 
     .img_class:hover {
+
+      transform: scale(1.5);
+      /* 放大比例 */
+    }
+
+    .txt_class {
+      border-radius: .5rem .5rem 0 0;
+      font-size: 3rem;
+      font-family: "黑体";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      transition: all 0.5s ease-in-out;
+      cursor: pointer;
+
+    }
+
+    .txt_class:hover {
 
       transform: scale(1.5);
       /* 放大比例 */
@@ -214,5 +280,11 @@ const handleClickArticle = (article_id: number) => {
   font-size: 1.2rem;
   border-bottom: .15rem dashed grey;
 
+}
+
+.none_class {
+  display: block;
+  font-size: 2rem;
+  margin: 2rem 2rem;
 }
 </style>

@@ -1,13 +1,11 @@
 <template>
   <div class="endConrainer">
     <div class="messageContainer">
-      <p>版本:2.1</p>
-      <p>修改日期:2025.02</p>
+      <p>版本:3.0</p>
+      <p>最近日期:2025.04</p>
       <p>作者:TABLE</p>
       <p>联系方式:table7982@gmail.com</p>
       <p>备案号:吉ICP备2025026866号</p>
-
-
 
       <div class="linksLogo">
         <a href="https://space.bilibili.com/1842925705?spm_id_from=333.1007.0.0" target="_blank">
@@ -45,7 +43,7 @@
         </a>
       </div>
       <hr class="whiteLine">
-      <img src="/logo_white.png" alt="logo" class="logoBottom">
+      <img :src="`${url}/static/logo_white.png`" alt="logo" class="logoBottom">
 
     </div>
 
@@ -54,7 +52,7 @@
 </template>
 
 <script setup lang='ts' name='IndexEnd'>
-
+import url from '@/my_api/config';
 </script>
 
 <style scoped>
@@ -64,6 +62,7 @@
   height: 20rem;
   background-color: black;
   opacity: 0.5;
+  z-index: 1;
 }
 
 .endConrainer .messageContainer {

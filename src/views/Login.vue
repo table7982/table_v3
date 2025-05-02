@@ -34,7 +34,7 @@
 <script setup lang="ts">
 // 逻辑代码区可根据需要添加表单验证等逻辑
 import Header from '@/components/header/Header.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useVisitorStore } from '../stores/visitor'
 import type { FormInstance } from 'element-plus'
 
